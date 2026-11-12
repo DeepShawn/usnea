@@ -107,3 +107,5 @@ them.
 - Browser tests use the `playwright` dev dependency with headless Chromium.
 - Lines-per-file limit (200) does not apply to tests, generated files or the two contract files.
 - `// biome-ignore` and `@ts-expect-error` are allowed only with a stated reason.
+- `node scripts/check-globals.mjs` fails on host globals (`window`, `document`, `console`, `setTimeout`, ...) in
+  the core, plugins, compat and examples. A justified exception needs `// usnea-allow-global: <reason>`.

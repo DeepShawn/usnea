@@ -15,7 +15,8 @@
     "changeset": "changeset",
     "check:spdx": "node scripts/check-spdx.mjs",
     "check:licenses": "node scripts/check-licenses.mjs",
-    "verify": "pnpm check && pnpm check:spdx && pnpm check:licenses && pnpm typecheck && pnpm build && pnpm test"
+    "verify": "pnpm check && pnpm check:spdx && pnpm check:licenses && pnpm check:globals && pnpm typecheck && pnpm build && pnpm test",
+    "check:globals": "node scripts/check-globals.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",

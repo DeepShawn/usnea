@@ -26,6 +26,8 @@ jobs:
       - run: pnpm check
       - run: node scripts/check-spdx.mjs
       - run: node scripts/check-licenses.mjs
+      - run: node scripts/check-globals.test.mjs
+      - run: node scripts/check-globals.mjs
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
