@@ -32,7 +32,6 @@
   "devDependencies": {
     "@types/node": "^22",
     "@usnea/cli": "workspace:*",
-    "@usnea/headless": "workspace:*",
     "usnea": "workspace:*"
   }
 }

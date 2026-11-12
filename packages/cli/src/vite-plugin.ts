@@ -27,7 +27,7 @@ export function projectModuleSource(config: ProjectConfig): string {
     ...imports,
     `export const config = ${JSON.stringify(config)};`,
     "export const modules = import.meta.glob(",
-    '  ["/components/**/*.ts", "/systems/**/*.ts", "!/**/*.test.ts", "!/**/*.d.ts"],',
+    '  ["/components/**/*.ts", "/systems/**/*.ts", "/resources/**/*.ts", "!/**/*.test.ts", "!/**/*.d.ts"],',
     "  { eager: true },",
     ");",
     `export const plugins = [${config.plugins.map((_, i) => `plugin${i}`).join(", ")}];`,

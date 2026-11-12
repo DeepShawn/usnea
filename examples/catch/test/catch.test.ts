@@ -1,34 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
-// `usnea test` runs this file's folder through Vitest too. CATCH_NESTED marks that nested run so
-// that it skips everything and does not start `usnea test` again.
 process.env.USNEA_SRC = "1";
 
 import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import path from "node:path";
-import { main } from "@usnea/cli";
-import { parseRecording, replay } from "@usnea/headless";
 import { afterAll, describe, expect, it } from "vitest";
-import { openGame, ROOT, readState } from "./harness.js";
+import { cli, ROOT, readState } from "./harness.js";
 import { decodePng } from "./png.js";
 
-const nested = process.env.CATCH_NESTED === "1";
 const TMP = path.join(ROOT, "test", ".tmp");
 afterAll(() => rm(TMP, { recursive: true, force: true }));
-
-async function cli(...argv: string[]) {
-  let [out, err] = ["", ""];
-  const io = {
-    cwd: ROOT,
-    stdout: (t: string) => {
-      out += t;
-    },
-    stderr: (t: string) => {
-      err += t;
-    },
-  };
-  const code = await main(argv, io);
-  return { code, out, err };
-}
 
 async function inspect(frames: number) {
   const r = await cli("inspect", "--frames", String(frames));
@@ -41,16 +21,11 @@ async function inspect(frames: number) {
   return { game, entities: JSON.stringify(snap.entities), step: snap.step };
 }
 
-describe.skipIf(nested)("catch", { timeout: 120_000 }, () => {
+describe("catch", { timeout: 120_000 }, () => {
   it("passes `usnea test` (replay cases and Vitest)", async () => {
-    process.env.CATCH_NESTED = "1";
-    try {
-      const r = await cli("test");
-      expect(r.out).toContain("2/2 replay cases passed");
-      expect(r.code, r.out + r.err).toBe(0);
-    } finally {
-      delete process.env.CATCH_NESTED;
-    }
+    const r = await cli("test");
+    expect(r.out).toContain("2/2 replay cases passed");
+    expect(r.code, r.out + r.err).toBe(0);
   });
 
   it("runs 600 frames headless to the same hash twice", async () => {
@@ -61,17 +36,12 @@ describe.skipIf(nested)("catch", { timeout: 120_000 }, () => {
   });
 
   it("scores when the recording catches a block", async () => {
-    const recording = parseRecording(await readFile(path.join(ROOT, "tests", "play.rec"), "utf8"));
-    const app = await openGame("scenes/main.scene.json", recording.seed);
-    try {
-      expect(readState(app)).toMatchObject({ score: 0, lives: 3, x: 400 });
-      replay(app, recording);
-      const state = readState(app);
-      expect(state.score).toBeGreaterThanOrEqual(1);
-      expect(state.x).not.toBe(400);
-    } finally {
-      app.dispose();
-    }
+    expect(readState((await cli("inspect")).out)).toMatchObject({ score: 0, lives: 3, x: 400 });
+    const r = await cli("inspect", "--replay", "tests/play.rec");
+    expect(r.code, r.err).toBe(0);
+    const state = readState(r.out);
+    expect(state.score).toBeGreaterThanOrEqual(1);
+    expect(state.x).not.toBe(400);
   });
 
   it("loses lives without input and ends in a static game over", async () => {

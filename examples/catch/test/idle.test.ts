@@ -7,10 +7,9 @@ import { type Browser, chromium, type Page } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ROOT } from "./harness.js";
 
-const nested = process.env.CATCH_NESTED === "1";
 let browser: Browser;
 beforeAll(async () => {
-  if (!nested) browser = await chromium.launch();
+  browser = await chromium.launch();
 }, 60_000);
 afterAll(async () => {
   await browser?.close();
@@ -26,7 +25,7 @@ async function counters(page: Page): Promise<{ draws: number; steps: number }> {
 
 const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 
-describe.skipIf(nested)("idle in the browser", { timeout: 90_000 }, () => {
+describe("idle in the browser", { timeout: 90_000 }, () => {
   it("stops stepping and drawing at game over, and wakes on Space", async () => {
     const io = { cwd: ROOT, stdout: () => undefined, stderr: () => undefined };
     const dev = await startDev(io, 0, "127.0.0.1");

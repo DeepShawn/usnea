@@ -16,11 +16,9 @@ export const Game = defineComponent("Game", {
   timer: f32,
 });
 
-/** Held keys, surface size and the latest pointer target (-1 when none), filled by `input`. */
+/** Held keys and the latest pointer target (world x; -1 when none), filled by `input`. */
 export const Controls = defineComponent("Controls", {
   left: bool,
   right: bool,
   x: f32.default(-1),
-  w: f32.default(800),
-  h: f32.default(600),
 });

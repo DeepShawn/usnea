@@ -2,6 +2,6 @@
   "scene": "scenes/main.scene.json",
   "recording": "play.rec",
   "expect": {
-    "hash": "59d54ff78b27572d5143d413e33b3b7612375fc33aeb6572e283f76a095716cb"
+    "hash": "b69162a63d755756d5f1c1ff7a7a5eb4925ec77519539961f135a41e1bba4398"
   }
 }

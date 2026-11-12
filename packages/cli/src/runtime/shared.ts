@@ -5,19 +5,26 @@ import {
   type AnyComponent,
   type App,
   type AppConfig,
+  Assets,
   createApp,
+  type EventDef,
   type Platform,
   type Plugin,
+  RawInput,
   type Recording,
+  type ResourceDef,
   type SystemDef,
+  Time,
 } from "usnea";
 import { type RenderBackend, render2d } from "usnea/2d";
 import type { ProjectConfig } from "../config.js";
 
-/** Components and systems found among a project's modules. */
+/** Components, systems, resources and events found among a project's modules. */
 export interface CollectedModules {
   readonly components: AnyComponent[];
   readonly systems: SystemDef[];
+  readonly resources: ResourceDef<unknown>[];
+  readonly events: EventDef<unknown>[];
 }
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
@@ -35,17 +42,38 @@ function isSystem(v: unknown): v is SystemDef {
   );
 }
 
-/** Collects every exported component and system definition, in file path order. */
+function isResource(v: unknown): v is ResourceDef<unknown> {
+  return isObject(v) && typeof v.$name === "string" && typeof v.init === "function";
+}
+
+function isEvent(v: unknown): v is EventDef<unknown> {
+  return isObject(v) && typeof v.$name === "string" && !("init" in v) && !("$schema" in v);
+}
+
+/** Built-ins the app registers itself; a project re-exporting them must not register them twice. */
+const BUILT_IN = new Set<unknown>([Time, Assets, RawInput]);
+
+/** Collects every exported component, system, resource and event definition, in file path order. */
 export function collectModules(modules: Record<string, Record<string, unknown>>): CollectedModules {
   const components = new Set<AnyComponent>();
   const systems = new Set<SystemDef>();
+  const resources = new Set<ResourceDef<unknown>>();
+  const events = new Set<EventDef<unknown>>();
   for (const file of Object.keys(modules).sort()) {
     for (const value of Object.values(modules[file] ?? {})) {
       if (isComponent(value)) components.add(value);
       else if (isSystem(value)) systems.add(value);
+      else if (BUILT_IN.has(value)) continue;
+      else if (isResource(value)) resources.add(value);
+      else if (isEvent(value)) events.add(value);
     }
   }
-  return { components: [...components], systems: [...systems] };
+  return {
+    components: [...components],
+    systems: [...systems],
+    resources: [...resources],
+    events: [...events],
+  };
 }
 
 /** Converts `#rrggbb` or `#rrggbbaa` to 0xRRGGBBAA. */
@@ -77,11 +105,14 @@ export function buildApp(o: BuildOptions): App {
     background: parseColor(config.background),
   });
   const owned = new Set<AnyComponent>(render.components);
+  const ownedResources = new Set<unknown>(render.resources);
   const found = collectModules(o.modules);
   const appConfig: AppConfig = {
     plugins: [render, ...(o.plugins ?? [])],
     components: found.components.filter((c) => !owned.has(c)),
     systems: found.systems,
+    resources: found.resources.filter((r) => !ownedResources.has(r)),
+    events: found.events,
     step: 1 / config.stepHz,
     seed: o.seed ?? config.seed,
     record: o.record ?? false,

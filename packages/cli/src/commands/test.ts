@@ -41,7 +41,10 @@ async function runVitest(io: Io): Promise<boolean> {
   }
   io.stdout("running vitest\n");
   return new Promise<boolean>((resolve) => {
-    const child = spawn(process.execPath, [entry, "run"], { cwd: io.cwd, env: process.env });
+    const child = spawn(process.execPath, [entry, "run"], {
+      cwd: io.cwd,
+      env: { ...process.env, USNEA_TEST_NESTED: "1" },
+    });
     child.stdout.on("data", (d: Buffer) => io.stdout(d.toString()));
     child.stderr.on("data", (d: Buffer) => io.stderr(d.toString()));
     child.on("error", () => resolve(false));
@@ -55,7 +58,9 @@ export async function testCommand(args: string[], io: Io): Promise<number> {
   const root = path.resolve(io.cwd);
   await loadConfig(root);
   const cases = await findCases(root);
-  const unitTests = await hasTestFiles(root);
+  // A nested run is the project's own Vitest calling `usnea test`: replay cases only.
+  const nested = process.env.USNEA_TEST_NESTED === "1";
+  const unitTests = !nested && (await hasTestFiles(root));
   if (cases.length === 0 && !unitTests) {
     io.stdout(
       "no tests found. Add replay cases as tests/<name>.case.json " +

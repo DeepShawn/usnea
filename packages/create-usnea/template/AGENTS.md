@@ -5,15 +5,16 @@ A 2D game on the Usnea engine (`usnea` {{engineVersion}}). Read this first; it o
 ## Layout
 
 - `usnea.json`: `name`, `scene`, `width`, `height`, `background` (`#rrggbb`), `stepHz`, `seed`, `pixelArt`.
-- `components/*.ts`: `defineComponent` definitions. `systems/*.ts`: `defineSystem` definitions.
-  The CLI loads every exported component and system from these two folders (nothing else).
+- `components/*.ts`: `defineComponent`. `systems/*.ts`: `defineSystem`. `resources/*.ts` (optional):
+  `defineResource` / `defineEvent`. The CLI loads every exported definition from these three folders.
 - `scenes/*.scene.json`, `prefabs/*.prefab.json`: entities as JSON. `tests/*.case.json`: replay cases.
 
 ## Verify loop (run after every change; no human needed)
 
 1. `npx usnea test`: replay cases (and `*.test.ts` through Vitest if present). `--update` rewrites hashes.
 2. `npx usnea run --headless --frames 120`: prints one JSON line (steps, renders, entities, hash); errors exit 1.
-3. `npx usnea inspect [scene] --frames N [-o file]`: world state as JSON; check the numbers.
+3. `npx usnea inspect [scene] [--frames N] [--replay file.rec] [--seed N] [-o file]`: world state as JSON
+   (after replaying a recording, if given); check the numbers.
 4. `npx usnea shot -o shot.png [--frames N]`: screenshot via Chromium (needs `playwright`); look at it.
 
 Also: `npx usnea dev [--port N]` serves the game. URL switches: `usnea-scene=<path>`,
@@ -57,6 +58,10 @@ import { Position, Sprite, Text, Camera, Rotation, Scale } from "usnea/2d";
   `{type:"wheel", dx, dy}`, `{type:"resize", width, height, pixelRatio}`, `{type:"visibility", visible}`.
   Keep held-key state in a component; events last one step.
 - `Time` via `world.res(Time)`: `{ dt, step, elapsed, alpha }`.
+- Resources and events: `defineResource("Name", () => ({...}))`, `defineEvent<T>("Name")`; export them from
+  `resources/*.ts` (or a system file); read with `world.res(R)`, send/receive with `world.emit` / `world.read`.
+- `View` (from `usnea/2d`, `world.res(View)`): `width`, `height` (design size), `surfaceWidth`, `surfaceHeight`.
+  `screenToWorld(world, e.x, e.y, out?)` turns pointer coordinates (surface pixels) into world `{x, y}`.
 - `usnea/2d` (world pixels, y down, colours `0xRRGGBBAA`; in JSON write the number, e.g. `4278190335`):
   `Position {x,y}`, `Rotation {angle}`, `Scale {x:1,y:1}`,
   `Sprite {image:"", width:0, height:0, anchorX:.5, anchorY:.5, color:0xffffffff, flipX, flipY, layer:0, order:0, visible:true}`,
@@ -72,6 +77,4 @@ import { Position, Sprite, Text, Camera, Rotation, Scale } from "usnea/2d";
 
 ## Not available yet
 
-Input, audio, physics, UI, tween and tilemap plugins; resources and events defined with
-`defineResource` / `defineEvent` are not registered by the CLI, so use components for state;
-no build or packaging for Web, desktop or Android; no pointer-to-world conversion helper.
+Input, audio, physics, UI, tween and tilemap plugins; no build or packaging for Web, desktop or Android.

@@ -41,7 +41,8 @@ describe("screenToWorld", () => {
   it("is the identity on a surface equal to the design size", () => {
     const { app } = make({ width: 800, height: 600 });
     const p = screenToWorld(app.world, 123, 45);
-    expect([p.x, p.y]).toEqual([123, 45]);
+    expect(p.x).toBeCloseTo(123, 4);
+    expect(p.y).toBeCloseTo(45, 4);
   });
 
   it("scales a surface twice as large", () => {
@@ -55,7 +56,7 @@ describe("screenToWorld", () => {
   it("removes the letterbox offset on a wider surface", () => {
     const { app } = make({ width: 1000, height: 600 });
     const p = screenToWorld(app.world, 300, 60);
-    expect(p.x).toBeCloseTo(100, 4);
+    expect(p.x).toBeCloseTo(200, 4);
     expect(p.y).toBeCloseTo(60, 4);
   });
 

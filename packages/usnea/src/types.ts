@@ -375,7 +375,10 @@ export interface Platform {
   /** Calls back once after a delay in seconds. */
   setTimer(callback: () => void, seconds: number): number;
   clearTimer(id: number): void;
-  /** Subscribes to platform events; returns an unsubscribe function. */
+  /**
+   * Subscribes to platform events; returns an unsubscribe function. The current surface size is
+   * available from `surface`; `resize` is only sent when it changes.
+   */
   onEvent(listener: (event: PlatformEvent) => void): () => void;
   /** Current drawable size. */
   readonly surface: {

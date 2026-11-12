@@ -1,47 +1,46 @@
 // SPDX-License-Identifier: Apache-2.0
-// Builds the game in-process on the headless platform, for tests that need to read state while
-// replaying a recording (the CLI can print a replay's hash but not its state).
+// Helpers for the example's tests: run the CLI in-process and read the game state from `inspect`.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createHeadlessBackend, createHeadlessPlatform } from "@usnea/headless";
-import { type App, createApp } from "usnea";
-import { render2d } from "usnea/2d";
-import * as game from "../components/game.js";
-import * as fall from "../systems/fall.js";
-import * as hud from "../systems/hud.js";
-import * as input from "../systems/input.js";
-import * as paddle from "../systems/paddle.js";
-import * as restart from "../systems/restart.js";
-import * as spawn from "../systems/spawn.js";
+import { main } from "@usnea/cli";
 
 /** The example project folder. */
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** Creates the app with the given scene loaded; dispose it before creating the next one. */
-export async function openGame(scene = "scenes/main.scene.json", seed = 7): Promise<App> {
-  const backend = createHeadlessBackend();
-  const platform = createHeadlessPlatform({ root: ROOT, width: 800, height: 600 });
-  const app = createApp({
-    plugins: [render2d({ backend, width: 800, height: 600, background: 0x14181fff })],
-    components: [game.Paddle, game.Block, game.Game, game.Controls],
-    systems: [fall.fall, hud.hud, input.input, paddle.paddle, restart.restart, spawn.spawn],
-    platform,
-    seed,
-    record: true,
-  });
-  await app.loadScene(scene);
-  return app;
+/** Runs `usnea <argv>` in the example folder and collects its output. */
+export async function cli(...argv: string[]): Promise<{ code: number; out: string; err: string }> {
+  let [out, err] = ["", ""];
+  const io = {
+    cwd: ROOT,
+    stdout: (t: string) => {
+      out += t;
+    },
+    stderr: (t: string) => {
+      err += t;
+    },
+  };
+  const code = await main(argv, io);
+  return { code, out, err };
 }
 
-/** Reads the HUD entity's game fields and the paddle x. */
-export function readState(app: App): { score: number; lives: number; over: boolean; x: number } {
-  const snap = app.world.snapshot().entities;
-  const hudC = snap.find((e) => e.id === "hud")?.components;
-  const pad = snap.find((e) => e.id === "paddle")?.components;
+/** The HUD's game fields and the paddle x, read from an `inspect` snapshot. */
+export function readState(snapshot: string): {
+  score: number;
+  lives: number;
+  over: boolean;
+  x: number;
+} {
+  const entities = (
+    JSON.parse(snapshot) as {
+      entities: { id?: string; components: Record<string, Record<string, unknown>> }[];
+    }
+  ).entities;
+  const hud = entities.find((e) => e.id === "hud")?.components;
+  const pad = entities.find((e) => e.id === "paddle")?.components;
   return {
-    score: Number(hudC?.Game?.score),
-    lives: Number(hudC?.Game?.lives),
-    over: hudC?.Game?.over === true,
+    score: Number(hud?.Game?.score),
+    lives: Number(hud?.Game?.lives),
+    over: hud?.Game?.over === true,
     x: Number(pad?.Position?.x),
   };
 }

@@ -8,15 +8,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { main as usnea } from "@usnea/cli";
-import { createHeadlessBackend, createHeadlessPlatform, replay } from "@usnea/headless";
-import { createApp } from "usnea";
-import { Position, render2d } from "usnea/2d";
 import { afterAll, describe, expect, it } from "vitest";
 import { main as createUsnea } from "../src/index.js";
 import { scaffold } from "../src/scaffold.js";
-import { Player, Target } from "../template/components/game.js";
-import { collect } from "../template/systems/collect.js";
-import { move } from "../template/systems/move.js";
 
 const PKG = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TMP = path.join(PKG, "test", ".tmp");
@@ -153,44 +147,42 @@ describe("scaffolded project", { timeout: 120_000 }, () => {
   });
 
   it("moves the player and collects the target when keys are replayed", async () => {
-    const backend = createHeadlessBackend();
-    const app = createApp({
-      plugins: [render2d({ backend, width: 800, height: 600, background: 0 })],
-      components: [Player, Target],
-      systems: [collect, move],
-      platform: createHeadlessPlatform({
-        root: path.join(PKG, "template"),
-        width: 800,
-        height: 600,
-      }),
+    const dir = await made();
+    const recording = (steps: number, events: [number, string, boolean][]) =>
+      `${[
+        JSON.stringify({ usnea: "0.1", seed: 1, step: 1 / 60, steps }),
+        ...events.map(([step, code, down]) =>
+          JSON.stringify({ step, event: { type: "key", code, down, repeat: false } }),
+        ),
+      ].join("\n")}\n`;
+    const replayed = async (steps: number, events: [number, string, boolean][]) => {
+      await writeFile(path.join(dir, "keys.rec"), recording(steps, events));
+      const r = await cli(dir, "inspect", "--replay", "keys.rec");
+      expect([r.code, r.err()]).toEqual([0, ""]);
+      const entities = JSON.parse(r.out()).entities as {
+        id: string;
+        components: Record<string, Record<string, number>>;
+      }[];
+      return (id: string) => entities.find((e) => e.id === id)?.components;
+    };
+    const half = await replayed(60, [
+      [0, "ArrowRight", true],
+      [30, "ArrowRight", false],
+      [30, "ArrowUp", true],
+    ]);
+    expect(half("player")?.Position).toMatchObject({
+      x: expect.closeTo(520, 1),
+      y: expect.closeTo(180, 1),
     });
-    try {
-      await app.loadScene("scenes/main.scene.json");
-      const key = (step: number, code: string, down: boolean) => ({
-        step,
-        event: { type: "key" as const, code, down, repeat: false },
-      });
-      const events = [
-        key(0, "ArrowRight", true),
-        key(30, "ArrowRight", false),
-        key(30, "ArrowUp", true),
-      ];
-      replay(app, { usnea: "0.1", seed: 1, step: 1 / 60, steps: 60, events });
-      const position = (id: string) =>
-        app.world.snapshot().entities.find((e) => e.id === id)?.components.Position;
-      expect(position("player")).toMatchObject({
-        x: expect.closeTo(520, 1),
-        y: expect.closeTo(180, 1),
-      });
-      expect(position("target")).toEqual({ x: 600, y: 160 });
-      app.world.add(app.world.find("target"), Position, { x: 520, y: 180 });
-      app.step(1);
-      expect(position("target")).not.toEqual({ x: 520, y: 180 });
-      const score = app.world.snapshot().entities[0]?.components.Player?.score;
-      expect(score).toBe(1);
-    } finally {
-      app.dispose();
-    }
+    expect(half("target")?.Position).toEqual({ x: 600, y: 160 });
+    const full = await replayed(100, [
+      [0, "ArrowRight", true],
+      [50, "ArrowRight", false],
+      [50, "ArrowUp", true],
+      [85, "ArrowUp", false],
+    ]);
+    expect(full("player")?.Player.score).toBe(1);
+    expect(full("target")?.Position).not.toEqual({ x: 600, y: 160 });
   });
 
   it("keeps the game logic within 50 lines", async () => {

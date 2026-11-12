@@ -12,6 +12,8 @@ export interface OpenOptions {
   readonly scene?: string | undefined;
   /** Text of a recording file to replay. */
   readonly recording?: string | undefined;
+  /** Seed for the app; a recording's own seed takes precedence. Defaults to the configured seed. */
+  readonly seed?: number | undefined;
 }
 
 /** A Vite server with the project and runtime loaded; apps are created from it one at a time. */
@@ -32,12 +34,18 @@ export async function openHost(io: Io): Promise<HeadlessHost> {
         root: string;
         scene?: string | undefined;
         recording?: string | undefined;
+        seed?: number | undefined;
       }) => Promise<HeadlessRuntime>;
     };
     return {
       async open(options = {}) {
         const scene = await resolveScene(root, config, options.scene);
-        return mod.createHeadlessRuntime({ root, scene, recording: options.recording });
+        return mod.createHeadlessRuntime({
+          root,
+          scene,
+          recording: options.recording,
+          seed: options.seed,
+        });
       },
       close: () => server.close(),
     };

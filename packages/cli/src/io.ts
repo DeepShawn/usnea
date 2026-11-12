@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 /** Where a command reads its project from and writes its output to. */
 export interface Io {
@@ -47,4 +49,16 @@ export function intOption(
     );
   }
   return n;
+}
+
+/** Reads a recording file given on the command line, or throws a `CliError` with a fix. */
+export async function readRecordingFile(io: Io, name: string): Promise<string> {
+  try {
+    return await readFile(path.resolve(io.cwd, name), "utf8");
+  } catch {
+    throw new CliError(
+      `recording file not found: ${name}`,
+      "pass the path of a file made by saveRecording()",
+    );
+  }
 }

@@ -22,6 +22,8 @@ export interface HeadlessOptions {
   readonly scene?: string | undefined;
   /** Recording file text to replay; its seed replaces the configured seed. */
   readonly recording?: string | undefined;
+  /** Seed to use when there is no recording; defaults to `config.seed`. */
+  readonly seed?: number | undefined;
 }
 
 /** The numbers `usnea run` reports. */
@@ -60,7 +62,14 @@ export async function createHeadlessRuntime(options: HeadlessOptions): Promise<H
     height: config.height,
   });
   const backend = createHeadlessBackend();
-  const app = buildApp({ config, modules, plugins, platform, backend, seed: recording?.seed });
+  const app = buildApp({
+    config,
+    modules,
+    plugins,
+    platform,
+    backend,
+    seed: recording?.seed ?? options.seed,
+  });
   try {
     await app.loadScene(scene);
   } catch (err) {

@@ -2,6 +2,6 @@
   "scene": "scenes/main.scene.json",
   "steps": 600,
   "expect": {
-    "hash": "5ae2a9f5f937211c69418569075bd6fa7bb0cc482dd7440fed0b5b7d8e8f3ad2"
+    "hash": "0839d22504f8c4e1b9966ebb38e56448a5d5b01d9931549d324d42ec70323261"
   }
 }

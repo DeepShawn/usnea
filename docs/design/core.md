@@ -251,6 +251,12 @@ Coordinates are in world pixels, y down. Colours are `0xRRGGBBAA`.
   top-left corner is the world origin.
 - View transform: the design resolution (`width` x `height`) is fitted inside
   the surface, preserving aspect ratio and centred ("contain").
+- `View` (resource, `ViewState`): `width` and `height` are the design size; `surfaceWidth` and
+  `surfaceHeight` the last known surface size in physical pixels; `a b c d tx ty` the last
+  world-to-clip transform. Valid from setup (camera-less) and refreshed on every draw.
+- `screenToWorld(world, x, y, out?)` converts surface pixel coordinates (pointer events) to world
+  coordinates by inverting the fit, camera position, zoom and rotation held in `View`. It
+  allocates only when `out` is omitted.
 - The plugin registers asset loaders for `.png .jpg .jpeg .webp` (texture),
   `.atlas.json` and `.font.json`.
 - Interpolation: an `input`-phase system copies `Position`, `Rotation` and

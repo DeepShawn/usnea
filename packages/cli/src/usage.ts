@@ -9,8 +9,10 @@ Commands:
   dev [--port N] [--host]            Start the dev server with page reload on every change
   run --headless [--frames N] [--scene path] [--replay file]
                                      Run without a display and print one JSON line of results
-  inspect [scene] [--frames N] [-o file]
-                                     Print the world state as JSON
+  inspect [scene] [--frames N] [--replay file] [--seed N] [-o file]
+                                     Print the world state as JSON. --replay plays a recording first
+                                     (with its seed); --frames N runs to N total steps; --seed N
+                                     sets the seed when there is no recording
   shot [scene] -o out.png [--frames N] [--width W] [--height H]
                                      Run the scene in Chromium and save a screenshot (needs playwright)
   test [--update]                    Run replay cases in tests/ and the project's Vitest files

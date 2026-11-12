@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { saveRecording } from "@usnea/headless";
+import { hashSnapshot, saveRecording } from "@usnea/headless";
 import { afterAll, describe, expect, it } from "vitest";
 import { main } from "../src/main.js";
 import { capture, cleanTmp, copyFixture } from "./helpers.js";
@@ -92,6 +92,40 @@ describe("usnea test", { timeout: 60_000 }, () => {
     expect(JSON.parse(longer.out)).toMatchObject({ steps: 70 });
     const inspected = await cli(dir, "inspect");
     expect([inspected.code, inspected.err]).toEqual([0, ""]);
+  });
+
+  it("inspect --replay plays a recording with its seed, --frames extends it", async () => {
+    const dir = await copyFixture();
+    const space = Array.from({ length: 8 }, (_, i) => key(3 + i * 4, "Space"));
+    const write = (name: string, seed: number) =>
+      writeFile(
+        path.join(dir, name),
+        saveRecording({ usnea: "0.1", seed, step: 1 / 60, steps: 60, events: space }),
+      );
+    await write("a.rec", 1);
+    await write("b.rec", 2);
+    const snap = async (...argv: string[]) => {
+      const r = await cli(dir, "inspect", ...argv);
+      expect([r.code, r.err]).toEqual([0, ""]);
+      return JSON.parse(r.out);
+    };
+    const player = (s: {
+      entities: { id?: string; components: Record<string, Record<string, unknown>> }[];
+    }) => s.entities.find((e) => e.id === "player")?.components;
+    const a = await snap("--replay", "a.rec");
+    expect(a.step).toBe(60);
+    expect(player(a)?.Player.speed).toBe(60 + 8 * 7);
+    expect(player(a)?.Player.score).toBeGreaterThanOrEqual(8);
+    const run = await cli(dir, "run", "--headless", "--replay", "a.rec");
+    expect(hashSnapshot(a)).toBe(JSON.parse(run.out).hash);
+    const b = await snap("--replay", "b.rec");
+    expect(player(b)?.Player.score).not.toBe(player(a)?.Player.score);
+    expect(await snap("--replay", "a.rec", "--seed", "2")).toEqual(a);
+    expect((await snap("--replay", "a.rec", "--frames", "75")).step).toBe(75);
+    expect((await snap("--seed", "5", "--frames", "3")).step).toBe(3);
+    const bad = await cli(dir, "inspect", "--replay", "missing.rec");
+    expect(bad.code).toBe(1);
+    expect(bad.err).toContain("recording file not found");
   });
 
   it("explains what to do when there is nothing to test", async () => {

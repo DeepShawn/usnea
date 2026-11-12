@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 import { parseRecording, saveRecording } from "@usnea/headless";
-import { defineComponent, defineSystem, f32 } from "usnea";
+import {
+  Assets,
+  defineComponent,
+  defineEvent,
+  defineResource,
+  defineSystem,
+  f32,
+  RawInput,
+  Time,
+} from "usnea";
 import { describe, expect, it } from "vitest";
 import { collectModules, formatRecording, parseColor } from "../src/runtime/shared.js";
 
@@ -43,6 +52,17 @@ describe("runtime/shared", () => {
     });
     expect(found.components).toEqual([C]);
     expect(found.systems).toEqual([S]);
+  });
+
+  it("collects resources and events, skipping the built-ins", () => {
+    const R = defineResource("SharedTestR", () => ({ n: 0 }));
+    const E = defineEvent<number>("SharedTestE");
+    const found = collectModules({
+      "/resources/r.ts": { R, E, Time, Assets, RawInput },
+      "/systems/s.ts": { R, E },
+    });
+    expect(found.resources).toEqual([R]);
+    expect(found.events).toEqual([E]);
   });
 
   it("parses colours", () => {
