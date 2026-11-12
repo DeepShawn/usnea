@@ -4,7 +4,7 @@ English | [简体中文](README.zh-CN.md)
 
 A lightweight 2D game engine built for vibe coding. One codebase is meant to run on Web, Windows, Linux and Android, with TypeScript + ECS, plain-text scenes, an npm plugin ecosystem, on-demand rendering to save power, and the ability to convert projects from other engines.
 
-> **Status: v0.0, just getting started.** Most of what is described below is **not implemented yet**. This page describes the roadmap, not the current state. Nothing here should be read as an available feature. The name "Usnea" (松萝) is provisional.
+> **Status: v0.1 in development, nothing published yet.** The core (ECS, scheduler, scenes, on-demand render loop), the WebGL2 and headless backends, the web platform layer, the `usnea` command line (`dev`, `run`, `inspect`, `shot`, `test`) and one example game exist and are tested. Plugins, multi-platform packaging and importers are **not implemented yet**; those parts of this page describe the roadmap. The name "Usnea" (松萝) is provisional.
 
 ## Goals
 
@@ -39,7 +39,7 @@ Each goal has an acceptance criterion in [docs/PLAN.md](docs/PLAN.md) (written i
 
 ## Interface sketch (draft)
 
-This is a design draft from the plan. It does not run today and the final implementation may differ.
+This runs today. The API may still change before 1.0. See [examples/catch](examples/catch) for a complete small game and [docs/design/core.md](docs/design/core.md) for how the core behaves.
 
 ```ts
 import { defineComponent, defineSystem, f32 } from "usnea";
@@ -62,7 +62,7 @@ export const movement = defineSystem({
 
 ## Target platforms
 
-Web, Windows, Linux and Android. The planned first stage wraps the web build in a native shell; an experimental native runtime is a later possibility. None of this exists yet.
+Web, Windows, Linux and Android. The planned first stage wraps the web build in a native shell; an experimental native runtime is a later possibility. Only the Web target works today.
 
 ## Roadmap
 
@@ -80,7 +80,7 @@ Sizes are relative effort; no dates are promised.
 
 ## Repository structure
 
-The directories exist, but every package is an empty skeleton.
+Packages under `plugins/`, `compat/` and `importers/` are still empty skeletons.
 
 ```
 usnea/
@@ -97,7 +97,7 @@ usnea/
 
 ## Development
 
-Requires Node >= 22 and pnpm. The packages are empty skeletons, so these commands currently have little to run.
+Requires Node >= 22 and pnpm. `pnpm verify` runs everything CI runs except the audit. Try the example with `pnpm --filter @usnea/example-catch dev`.
 
 ```
 pnpm install

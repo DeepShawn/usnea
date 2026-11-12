@@ -4,7 +4,7 @@
 
 为 Vibe Coding 而生的轻量 2D 游戏引擎。一套代码运行在 Web、Windows、Linux 和安卓上；TypeScript + ECS、纯文本场景、npm 插件生态、按需渲染省电，并能把其他引擎的项目直接转写过来。
 
-> **状态：v0.0，刚刚起步。** 下文描述的大部分功能**尚未实现**。本页是路线图，不是现状，任何内容都不应被当作已有功能。“Usnea”为暂定名。
+> **状态：v0.1 开发中，尚未发布任何版本。** 核心（ECS、调度器、场景、按需渲染主循环）、WebGL2 与无头后端、Web 平台层、`usnea` 命令行（`dev`、`run`、`inspect`、`shot`、`test`）和一个示例游戏已经实现并有测试。插件、多平台打包和导入器**尚未实现**，本页的这些部分是路线图。“Usnea”为暂定名。
 
 ## 目标
 
@@ -39,7 +39,7 @@
 
 ## 接口草案
 
-以下是规划中的设计草案，目前无法运行，最终实现可能不同。
+这段代码现在可以运行。1.0 之前接口仍可能变化。完整的小游戏见 [examples/catch](examples/catch)，核心的行为说明见 [docs/design/core.md](docs/design/core.md)。
 
 ```ts
 import { defineComponent, defineSystem, f32 } from "usnea";
@@ -62,7 +62,7 @@ export const movement = defineSystem({
 
 ## 目标平台
 
-Web、Windows、Linux、安卓。计划第一阶段给 Web 构建产物套一层原生“壳”，之后可能做实验性的原生运行时。以上均尚未实现。
+Web、Windows、Linux、安卓。计划第一阶段给 Web 构建产物套一层原生“壳”，之后可能做实验性的原生运行时。目前只有 Web 可用。
 
 ## 路线图
 
@@ -80,7 +80,7 @@ Web、Windows、Linux、安卓。计划第一阶段给 Web 构建产物套一层
 
 ## 仓库结构
 
-目录已经建立，但每个包目前都是空骨架。
+`plugins/`、`compat/`、`importers/` 下的包目前还是空骨架。
 
 ```
 usnea/
@@ -97,7 +97,7 @@ usnea/
 
 ## 开发
 
-需要 Node >= 22 和 pnpm。各包目前是空骨架，所以这些命令几乎没有可运行的内容。
+需要 Node >= 22 和 pnpm。`pnpm verify` 会运行 CI 里除漏洞扫描外的全部检查。试玩示例：`pnpm --filter @usnea/example-catch dev`。
 
 ```
 pnpm install

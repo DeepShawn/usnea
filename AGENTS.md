@@ -5,7 +5,8 @@ Operating manual for AI coding agents and new contributors. Read it before chang
 ## Project
 
 Usnea is an open-source 2D game engine (TypeScript, Apache-2.0), built as a pnpm monorepo.
-Current state: **v0.0 bootstrap**. Packages are empty skeletons; there is no engine code yet.
+Current state: **v0.1 in development**. Core, `usnea/2d`, platform-web, render-webgl2, headless, cli,
+create-usnea and `examples/catch` are implemented; plugins, compat and importers are empty skeletons.
 The authoritative plan is [docs/PLAN.md](docs/PLAN.md) (written in Chinese). When this file and
 the plan disagree about the future, the plan wins; this file only states what is true today.
 
@@ -89,10 +90,10 @@ Don't:
 
 ## Verifying your work
 
-Today, verification is the command list above: `pnpm check`, `pnpm typecheck`, `pnpm test`,
-the two `scripts/` checks. The engine's own AI-verification CLI is **planned for v0.1** and does
-not exist yet: `usnea test`, `usnea run --headless`, `usnea shot`, `usnea inspect`. Do not call
-them.
+Run `pnpm verify` before every commit. To check a game project (for example `examples/catch`), use the
+engine's own CLI from the project folder: `usnea test`, `usnea run --headless --frames N`,
+`usnea inspect`, `usnea shot -o out.png`. Inside this repository, build the CLI first
+(`pnpm --filter @usnea/cli build`) and run it as `USNEA_SRC=1 node packages/cli/dist/cli.js <command>`.
 
 ## Design contract
 
