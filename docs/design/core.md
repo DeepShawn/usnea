@@ -54,8 +54,9 @@ comes through `Platform`.
   check `world.isAlive(e)` or `world.has(e, C)` if the system itself removes
   things from its own query.
 - Queries are cached by signature and kept up to date incrementally (sparse
-  set). `world.query()` returns the live view; the `entities` argument of
-  `run` is a snapshot copy held in a per-system buffer that is reused.
+  set). `world.query()` returns a view that is valid until the next structural
+  change; call it again afterwards. The `entities` argument of `run` is a
+  snapshot copy held in a per-system buffer that is reused.
 - Hot paths (system dispatch, query maintenance, event read) allocate nothing
   per step once warmed up.
 
@@ -192,6 +193,7 @@ form: what happened, where, how to fix it. Messages are in English.
 
 | Code | Meaning |
 |---|---|
+| E000 | Invalid definition (empty name, missing function) or internal wiring error |
 | E001 | Duplicate component name |
 | E002 | Invalid field name or field type in a schema |
 | E003 | Component is not registered with this app |
