@@ -1,0 +1,28 @@
+{
+  "name": "create-usnea",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Project scaffolding for Usnea (npm create usnea).",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeepShawn/usnea.git",
+    "directory": "packages/create-usnea"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

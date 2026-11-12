@@ -21,6 +21,52 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(vite@8.3.8(yaml@2.9.1))
 
+  compat/cocos: {}
+
+  compat/godot: {}
+
+  compat/phaser: {}
+
+  compat/unity: {}
+
+  importers/cocos: {}
+
+  importers/core: {}
+
+  importers/godot: {}
+
+  importers/phaser: {}
+
+  importers/unity: {}
+
+  packages/cli: {}
+
+  packages/create-usnea: {}
+
+  packages/headless: {}
+
+  packages/platform-web: {}
+
+  packages/render-webgl2: {}
+
+  packages/usnea: {}
+
+  plugins/audio: {}
+
+  plugins/device: {}
+
+  plugins/input: {}
+
+  plugins/particles: {}
+
+  plugins/physics2d: {}
+
+  plugins/tilemap: {}
+
+  plugins/tween: {}
+
+  plugins/ui: {}
+
 packages:
 
   '@biomejs/biome@2.6.7':

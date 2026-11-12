@@ -12,7 +12,10 @@
     "format": "biome check --write .",
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --if-present typecheck",
     "test": "vitest run --passWithNoTests",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "check:spdx": "node scripts/check-spdx.mjs",
+    "check:licenses": "node scripts/check-licenses.mjs",
+    "verify": "pnpm check && pnpm check:spdx && pnpm check:licenses && pnpm typecheck && pnpm build && pnpm test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",

@@ -1,0 +1,37 @@
+{
+  "name": "usnea",
+  "version": "0.0.0",
+  "description": "A lightweight, text-first 2D game engine built for vibe coding. Core: ECS, scheduler, events, scenes.",
+  "keywords": [
+    "game-engine",
+    "2d",
+    "ecs",
+    "typescript",
+    "webgl2"
+  ],
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeepShawn/usnea.git",
+    "directory": "packages/usnea"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}
