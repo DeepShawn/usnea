@@ -6,6 +6,7 @@
       "!**/dist",
       "!**/node_modules",
       "!**/coverage",
+      "!**/.tmp",
       "!docs/PLAN.md",
       "!pnpm-lock.yaml",
       "!**/*.md"
