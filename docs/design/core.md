@@ -220,7 +220,6 @@ form: what happened, where, how to fix it. Messages are in English.
 | E024 | Too many entities (slot index exceeds 20 bits) |
 | E040 | Atlas frame not found |
 | E041 | Text needs `platform.rasterizeText` or a bitmap font |
-| E042 | The 2D plugin needs a platform to load images |
 
 ## 8. 2D rendering (`usnea/2d`)
 
