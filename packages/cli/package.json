@@ -25,5 +25,27 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.check.json"
+  },
+  "bin": {
+    "usnea": "./dist/cli.js"
+  },
+  "dependencies": {
+    "usnea": "workspace:*",
+    "@usnea/headless": "workspace:*",
+    "@usnea/platform-web": "workspace:*",
+    "@usnea/render-webgl2": "workspace:*",
+    "vite": "^8"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.40"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "playwright": "1.63.0"
   }
 }

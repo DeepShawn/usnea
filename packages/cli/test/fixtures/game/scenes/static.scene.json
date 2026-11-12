@@ -1,0 +1,13 @@
+{
+  "usnea": "0.1",
+  "name": "static",
+  "entities": [
+    {
+      "id": "box",
+      "components": {
+        "Position": { "x": 160, "y": 120 },
+        "Sprite": { "image": "assets/box.png", "width": 48, "height": 48 }
+      }
+    }
+  ]
+}

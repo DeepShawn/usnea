@@ -1,0 +1,7 @@
+{
+  "usnea": "0.1",
+  "components": {
+    "Position": { "x": 0, "y": 0 },
+    "Sprite": { "image": "assets/box.png", "width": 16, "height": 16 }
+  }
+}

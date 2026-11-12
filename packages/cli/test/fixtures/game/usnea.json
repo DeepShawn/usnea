@@ -1,0 +1,9 @@
+{
+  "name": "fixture-game",
+  "scene": "scenes/main.scene.json",
+  "width": 320,
+  "height": 240,
+  "background": "#101820",
+  "stepHz": 60,
+  "seed": 1
+}

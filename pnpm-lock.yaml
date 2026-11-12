@@ -48,7 +48,30 @@ importers:
 
   importers/unity: {}
 
-  packages/cli: {}
+  packages/cli:
+    dependencies:
+      '@usnea/headless':
+        specifier: workspace:*
+        version: link:../headless
+      '@usnea/platform-web':
+        specifier: workspace:*
+        version: link:../platform-web
+      '@usnea/render-webgl2':
+        specifier: workspace:*
+        version: link:../render-webgl2
+      usnea:
+        specifier: workspace:*
+        version: link:../usnea
+      vite:
+        specifier: ^8
+        version: 8.3.8(@types/node@22.20.5)(yaml@2.9.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      playwright:
+        specifier: 1.63.0
+        version: 1.63.0
 
   packages/create-usnea: {}
 
