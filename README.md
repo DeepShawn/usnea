@@ -80,7 +80,7 @@ Sizes are relative effort; no dates are promised.
 
 ## Repository structure
 
-Planned layout. Only `docs/` exists today.
+The directories exist, but every package is an empty skeleton.
 
 ```
 usnea/
@@ -97,7 +97,7 @@ usnea/
 
 ## Development
 
-Requires Node >= 22 and pnpm. These are the intended commands once the pnpm workspace is set up; it is not set up yet.
+Requires Node >= 22 and pnpm. The packages are empty skeletons, so these commands currently have little to run.
 
 ```
 pnpm install

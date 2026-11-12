@@ -1,6 +1,6 @@
 # Contributing to Usnea
 
-Thanks for your interest. Usnea is at v0.0 and most of the planned code does not exist yet, so some commands below only work once the pnpm workspace is set up. The plan is in [docs/PLAN.md](docs/PLAN.md) (Chinese).
+Thanks for your interest. Usnea is at v0.0: the packages are empty skeletons, so the commands below currently have little to run. The plan is in [docs/PLAN.md](docs/PLAN.md) (Chinese).
 
 ## Setup
 
@@ -40,7 +40,7 @@ AI-assisted contributions are welcome. State in the pull request description whi
 
 ## 中文摘要
 
-- 环境：Node >= 22、pnpm；常用命令 `pnpm install`、`pnpm check`、`pnpm typecheck`、`pnpm test`、`pnpm build`。目前工作区尚未建立，部分命令暂时不可用。
+- 环境：Node >= 22、pnpm；常用命令 `pnpm install`、`pnpm check`、`pnpm typecheck`、`pnpm test`、`pnpm build`。各包目前是空骨架，命令几乎没有可运行的内容。
 - 重大改动先在 GitHub Discussions 发提案，再动手。
 - 提交要小，一次只做一件事，附带测试；使用 DCO，用 `git commit -s` 添加 `Signed-off-by`，不设 CLA。
 - 涉及 API 变更的 PR 需要用 `pnpm changeset` 添加 changeset。
