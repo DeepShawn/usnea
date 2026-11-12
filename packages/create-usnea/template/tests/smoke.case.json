@@ -1,0 +1,7 @@
+{
+  "scene": "scenes/main.scene.json",
+  "steps": 120,
+  "expect": {
+    "hash": "ad6426cfa058412faafab76957304fc03bfc7ea05d58d2b210cacb7711b5318d"
+  }
+}

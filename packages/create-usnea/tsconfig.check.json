@@ -2,8 +2,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "lib": ["ES2022", "DOM"]
   },
-  "include": ["src", "test"],
+  "include": [
+    "src",
+    "test",
+    "template/components",
+    "template/systems",
+    "../cli/src/runtime/virtual.d.ts"
+  ],
   "exclude": []
 }

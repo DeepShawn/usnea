@@ -1,0 +1,5 @@
+{"usnea":"0.1","seed":7,"step":0.016666666666666666,"steps":420}
+{"step":49,"event":{"type":"key","code":"ArrowLeft","down":true,"repeat":false}}
+{"step":262,"event":{"type":"key","code":"ArrowLeft","down":false,"repeat":false}}
+{"step":262,"event":{"type":"key","code":"ArrowRight","down":true,"repeat":false}}
+{"step":263,"event":{"type":"key","code":"ArrowRight","down":false,"repeat":false}}

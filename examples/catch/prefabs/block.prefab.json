@@ -1,0 +1,8 @@
+{
+  "usnea": "0.1",
+  "components": {
+    "Position": { "x": 0, "y": -20 },
+    "Sprite": { "width": 24, "height": 24, "color": 4290203135 },
+    "Block": { "speed": 160 }
+  }
+}

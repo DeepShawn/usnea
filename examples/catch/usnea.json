@@ -1,0 +1,9 @@
+{
+  "name": "catch",
+  "scene": "scenes/main.scene.json",
+  "width": 800,
+  "height": 600,
+  "background": "#14181f",
+  "stepHz": 60,
+  "seed": 7
+}

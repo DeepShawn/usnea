@@ -1,0 +1,21 @@
+{
+  "name": "{{name}}",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "usnea dev",
+    "test": "usnea test",
+    "shot": "usnea shot -o shot.png",
+    "check": "usnea run --headless --frames 120",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "usnea": "^{{engineVersion}}",
+    "@usnea/cli": "^{{engineVersion}}"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

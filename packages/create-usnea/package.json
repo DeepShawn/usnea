@@ -1,7 +1,6 @@
 {
   "name": "create-usnea",
   "version": "0.0.0",
-  "private": true,
   "description": "Project scaffolding for Usnea (npm create usnea).",
   "type": "module",
   "license": "Apache-2.0",
@@ -12,6 +11,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "create-usnea": "./dist/index.js"
+  },
   "exports": {
     ".": {
       "usnea-src": "./src/index.ts",
@@ -20,10 +22,17 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "template"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.check.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@usnea/cli": "workspace:*",
+    "@usnea/headless": "workspace:*",
+    "usnea": "workspace:*"
   }
 }

@@ -38,6 +38,25 @@ importers:
 
   compat/unity: {}
 
+  examples/catch:
+    dependencies:
+      '@usnea/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      usnea:
+        specifier: workspace:*
+        version: link:../../packages/usnea
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      '@usnea/headless':
+        specifier: workspace:*
+        version: link:../../packages/headless
+      playwright:
+        specifier: 1.63.0
+        version: 1.63.0
+
   importers/cocos: {}
 
   importers/core: {}
@@ -73,7 +92,20 @@ importers:
         specifier: 1.63.0
         version: 1.63.0
 
-  packages/create-usnea: {}
+  packages/create-usnea:
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      '@usnea/cli':
+        specifier: workspace:*
+        version: link:../cli
+      '@usnea/headless':
+        specifier: workspace:*
+        version: link:../headless
+      usnea:
+        specifier: workspace:*
+        version: link:../usnea
 
   packages/headless:
     dependencies:

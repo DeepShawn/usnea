@@ -1,0 +1,24 @@
+{
+  "usnea": "0.1",
+  "name": "quick",
+  "prefabs": ["prefabs/block.prefab.json"],
+  "entities": [
+    {
+      "id": "paddle",
+      "components": {
+        "Position": { "x": 400, "y": 570 },
+        "Sprite": { "width": 100, "height": 20, "color": 1338243071 },
+        "Paddle": {},
+        "Controls": {}
+      }
+    },
+    {
+      "id": "hud",
+      "components": {
+        "Position": { "x": 16, "y": 12 },
+        "Text": { "size": 24, "color": 3772834047 },
+        "Game": { "lives": 1, "every": 0.3 }
+      }
+    }
+  ]
+}
