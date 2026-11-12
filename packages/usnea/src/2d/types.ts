@@ -80,6 +80,28 @@ export interface Render2DOptions {
   readonly background?: number;
 }
 
+/**
+ * Contents of the `View` resource: the design size, the last known surface size and the last
+ * view transform, so game code can convert surface pixels to world coordinates.
+ */
+export interface ViewState {
+  /** Design width in world pixels (from the plugin options). */
+  width: number;
+  /** Design height in world pixels (from the plugin options). */
+  height: number;
+  /** Last known surface width in physical pixels. */
+  surfaceWidth: number;
+  /** Last known surface height in physical pixels. */
+  surfaceHeight: number;
+  /** World to clip transform `[a, b, c, d, tx, ty]`, the same numbers as `Frame.view`. */
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  tx: number;
+  ty: number;
+}
+
 /** An atlas file (`*.atlas.json`): named frames within one image. */
 export interface AtlasData {
   readonly usnea: string;

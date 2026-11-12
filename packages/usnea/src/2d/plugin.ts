@@ -13,6 +13,7 @@ import { PrevState } from "./interp.js";
 import { TextCache } from "./textcache.js";
 import type { Frame, Render2DOptions } from "./types.js";
 import { computeView, createViewCamera } from "./view.js";
+import { storeView, View } from "./viewstate.js";
 
 const ALL = [Position, Rotation, Scale, Sprite, NineSlice, Text, Camera];
 
@@ -69,6 +70,7 @@ export function render2d(options: Render2DOptions): Plugin {
       const alpha = world.res(Time).alpha;
       findCamera(c, prev, alpha, cam);
       computeView(frame.view, designW, designH, w, h, cam);
+      storeView(world.res(View), frame.view, w, h);
       buildDrawList(c, prev, alpha);
       backend.render(frame as Frame);
     },
@@ -78,9 +80,16 @@ export function render2d(options: Render2DOptions): Plugin {
     name: "usnea/2d",
     components: ALL,
     systems: [snapshot, render],
-    resources: [Assets],
+    resources: [Assets, View],
     setup(app: App) {
       platform = app.platform;
+      const view = app.world.res(View);
+      view.width = designW;
+      view.height = designH;
+      const w = platform?.surface.width ?? designW;
+      const h = platform?.surface.height ?? designH;
+      computeView(frame.view, designW, designH, w, h, cam);
+      storeView(view, frame.view, w, h);
       registerLoaders(app.world.res(Assets), backend);
     },
   });
