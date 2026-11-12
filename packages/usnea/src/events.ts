@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import { usneaError } from "./errors.js";
-import type { EventDef } from "./types.js";
+import type { EventDef, PlatformEvent } from "./types.js";
 
 /** Defines a typed event channel; events are cleared at the end of each logic step. */
 export function defineEvent<T>(name: string): EventDef<T> {
@@ -9,6 +9,9 @@ export function defineEvent<T>(name: string): EventDef<T> {
   }
   return { $name: name };
 }
+
+/** Event carrying every platform event, delivered in the logic step that consumes it. */
+export const RawInput: EventDef<PlatformEvent> = defineEvent<PlatformEvent>("RawInput");
 
 /** Internal: per-world event channels. */
 export class EventBus {
