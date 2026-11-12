@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+export { Assets } from "./assets.js";
 export { defineComponent } from "./component.js";
 export { UsneaError } from "./errors.js";
 export { defineEvent } from "./events.js";
