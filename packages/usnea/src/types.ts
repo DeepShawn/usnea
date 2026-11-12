@@ -125,7 +125,8 @@ export interface SystemConfig {
    * then neither requests a redraw nor keeps the loop awake on this system's
    * account. Any other return value counts as active.
    */
-  run(world: World, dt: number, entities: Entities): boolean | undefined | void;
+  // biome-ignore lint/suspicious/noConfusingVoidType: systems that return nothing must type-check
+  run(world: World, dt: number, entities: Entities): boolean | void;
 }
 
 /** A defined system, ready to register with an app or plugin. */
@@ -420,6 +421,8 @@ export interface AppConfig extends Omit<Plugin, "name" | "setup"> {
   readonly seed?: number;
   /** Record injected platform events for replay. Defaults to false. */
   readonly record?: boolean;
+  /** Interpolate drawing between logic steps (`Time.alpha`). Defaults to true. */
+  readonly interpolate?: boolean;
   /** Draw every frame regardless of changes (debugging). Defaults to false. */
   readonly alwaysRender?: boolean;
 }

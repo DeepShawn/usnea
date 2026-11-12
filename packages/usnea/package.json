@@ -20,8 +20,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "usnea-src": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./2d": {
+      "usnea-src": "./src/2d/index.ts",
+      "types": "./dist/2d/index.d.ts",
+      "import": "./dist/2d/index.js"
     }
   },
   "files": [
@@ -32,6 +38,6 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.check.json"
   }
 }

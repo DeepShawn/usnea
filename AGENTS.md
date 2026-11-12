@@ -93,3 +93,17 @@ Today, verification is the command list above: `pnpm check`, `pnpm typecheck`, `
 the two `scripts/` checks. The engine's own AI-verification CLI is **planned for v0.1** and does
 not exist yet: `usnea test`, `usnea run --headless`, `usnea shot`, `usnea inspect`. Do not call
 them.
+
+## Design contract
+
+- `docs/design/core.md` is the behavioural contract for the core, the loop and 2D rendering. Read it
+  before touching `packages/usnea`, `packages/platform-web`, `packages/render-webgl2` or
+  `packages/headless`.
+- `packages/usnea/src/types.ts` and `packages/usnea/src/2d/types.ts` are the type contract. Do not
+  edit them as part of an implementation task; report problems instead.
+- Packages import each other by package name. The `usnea-src` export condition resolves those
+  imports to TypeScript sources, so no build is needed before `pnpm typecheck` or `pnpm test`.
+- `pnpm verify` runs every check CI runs except the audit.
+- Browser tests use the `playwright` dev dependency with headless Chromium.
+- Lines-per-file limit (200) does not apply to tests, generated files or the two contract files.
+- `// biome-ignore` and `@ts-expect-error` are allowed only with a stated reason.

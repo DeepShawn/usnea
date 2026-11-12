@@ -78,8 +78,6 @@ export interface Render2DOptions {
   readonly height?: number;
   /** Background colour as 0xRRGGBBAA. Defaults to opaque black. */
   readonly background?: number;
-  /** Interpolate positions between logic steps. Defaults to true. */
-  readonly interpolate?: boolean;
 }
 
 /** An atlas file (`*.atlas.json`): named frames within one image. */
