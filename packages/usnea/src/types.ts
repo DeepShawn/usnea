@@ -312,7 +312,10 @@ export interface AssetStore {
 export interface PlatformImage {
   readonly width: number;
   readonly height: number;
-  /** Platform-specific pixel source; only render backends look inside. */
+  /**
+   * Platform-specific pixel source; only render backends look inside. Every backend must also
+   * accept a `Uint8Array` of RGBA8 pixels (`width * height * 4` bytes, top row first).
+   */
   readonly source: unknown;
 }
 

@@ -3,7 +3,7 @@ import type { AssetStore, Platform, World } from "../types.js";
 import { createXform, type Xform } from "./drawlist.js";
 import { createTextLayout, type TextLayout } from "./text.js";
 import type { TextCache } from "./textcache.js";
-import type { DrawList, RenderBackend } from "./types.js";
+import type { DrawList, RenderBackend, TextureInfo } from "./types.js";
 
 /** A source rectangle within a texture, in pixels. */
 export interface SourceRect {
@@ -27,6 +27,8 @@ export interface DrawContext {
   src: SourceRect;
   layout: TextLayout;
   texts: TextCache | undefined;
+  /** Shared 1x1 white texture for image-less sprites; created on first use. */
+  white: TextureInfo | undefined;
 }
 
 /** Creates a draw context; `world`, `assets`, `backend` and `list` are filled by the caller. */
@@ -46,5 +48,6 @@ export function createContext(
     src: { tex: 0, texW: 1, texH: 1, x: 0, y: 0, w: 0, h: 0 },
     layout: createTextLayout(),
     texts: undefined,
+    white: undefined,
   };
 }

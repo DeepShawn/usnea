@@ -34,7 +34,15 @@ function parseRef(path: string): ImageRef {
 
 /** Resolves `image` or `atlas.json#frame` into `out`; false while the asset is not loaded. */
 export function resolveSource(ctx: DrawContext, path: string, out: SourceRect): boolean {
-  if (path === "") return false;
+  if (path === "") {
+    ctx.white ??= ctx.backend.createTexture({
+      width: 1,
+      height: 1,
+      source: new Uint8Array([255, 255, 255, 255]),
+    });
+    setRect(out, ctx.white, 0, 0, 1, 1);
+    return true;
+  }
   const ref = parseRef(path);
   const asset = ctx.assets.get<TextureInfo | AtlasAsset>(ref.base);
   if (asset === undefined) return false;

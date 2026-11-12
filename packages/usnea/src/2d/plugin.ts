@@ -44,8 +44,10 @@ export function render2d(options: Render2DOptions): Plugin {
 
   function context(world: World): ReturnType<typeof createContext> {
     if (ctx === undefined || ctx.world !== world) {
+      const white = ctx?.white;
       ctx = createContext(backend, list, world, world.res(Assets));
       ctx.texts = texts;
+      ctx.white = white;
     }
     ctx.platform = platform;
     return ctx;

@@ -239,7 +239,8 @@ Coordinates are in world pixels, y down. Colours are `0xRRGGBBAA`.
 | `Text` | `text` str, `font` str ("sans-serif"), `size` f32 (16), `color` u32 (0xffffffff), `align` str ("left"), `wrapWidth` f32 (0), `anchorX` f32 (0), `anchorY` f32 (0), `layer` i32 (0), `order` f32 (0), `visible` bool (true) |
 | `Camera` | `zoom` f32 (1), `active` bool (true) |
 
-- `Sprite.image` is an image path, or `path/to.atlas.json#frameName`.
+- `Sprite.image` is an image path, or `path/to.atlas.json#frameName`. An empty `image`
+  draws a solid rectangle in `Sprite.color`, sized by `width` and `height`.
 - `Text.font` ending in `.font.json` is a bitmap font (one quad per glyph);
   anything else is a font family rasterised by `platform.rasterizeText` into a
   texture cached per entity and rebuilt when text, font, size, wrap or align

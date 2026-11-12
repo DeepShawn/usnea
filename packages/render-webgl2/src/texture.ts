@@ -3,6 +3,19 @@
 import type { PlatformImage } from "usnea";
 import type { TextureInfo } from "usnea/2d";
 
+/** Returns a copy of straight-alpha RGBA8 bytes with colour premultiplied by alpha. */
+function premultiply(bytes: Uint8Array): Uint8Array {
+  const out = new Uint8Array(bytes.length);
+  for (let i = 0; i + 3 < bytes.length; i += 4) {
+    const a = bytes[i + 3] as number;
+    out[i] = Math.round(((bytes[i] as number) * a) / 255);
+    out[i + 1] = Math.round(((bytes[i + 1] as number) * a) / 255);
+    out[i + 2] = Math.round(((bytes[i + 2] as number) * a) / 255);
+    out[i + 3] = a;
+  }
+  return out;
+}
+
 /** Owns GL textures and their ids (starting at 1, never reused while alive). */
 export class TextureStore {
   private readonly textures = new Map<number, WebGLTexture>();
@@ -21,14 +34,29 @@ export class TextureStore {
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      image.source as TexImageSource,
-    );
+    if (image.source instanceof Uint8Array) {
+      // The premultiply flag does not apply to ArrayBufferView uploads, so do it by hand.
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        image.width,
+        image.height,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        premultiply(image.source),
+      );
+    } else {
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        image.source as TexImageSource,
+      );
+    }
     const filter = this.pixelArt ? gl.NEAREST : gl.LINEAR;
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);

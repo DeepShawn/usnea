@@ -3,7 +3,11 @@ import type { DrawList } from "usnea/2d";
 import { createWebGL2Backend } from "../../src/index.js";
 
 export interface TextureSpec {
-  readonly kind: "solid" | "halves";
+  readonly kind: "solid" | "halves" | "bytes";
+  /** For `bytes`: RGBA8 pixels uploaded as a `Uint8Array`. */
+  readonly pixels?: readonly number[];
+  readonly w?: number;
+  readonly h?: number;
   readonly color?: readonly number[];
 }
 export interface QuadSpec {
@@ -33,6 +37,9 @@ export interface Result {
 }
 
 function makeImage(spec: TextureSpec) {
+  if (spec.kind === "bytes") {
+    return { width: spec.w ?? 1, height: spec.h ?? 1, source: new Uint8Array(spec.pixels ?? []) };
+  }
   const c = document.createElement("canvas");
   c.width = 8;
   c.height = 8;

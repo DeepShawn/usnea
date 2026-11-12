@@ -125,6 +125,19 @@ describe("webgl2 backend", () => {
     near(px(blended, 1, 1), [128, 0, 127, 255]);
   });
 
+  it("uploads Uint8Array pixels, tinted and with distinct texels", async () => {
+    const white = { kind: "bytes", w: 1, h: 1, pixels: [255, 255, 255, 255] } as const;
+    const red = await draw({
+      textures: [white],
+      quads: [quad({ w: 16, h: 16, color: 0xff0000ff })],
+    });
+    near(px(red, 8, 8), [255, 0, 0, 255]);
+    const two = { kind: "bytes", w: 2, h: 1, pixels: [255, 0, 0, 255, 0, 0, 255, 255] } as const;
+    const both = await draw({ textures: [two], quads: [quad({ w: 16, h: 16 })] });
+    near(px(both, 2, 8), [255, 0, 0, 255]);
+    near(px(both, 13, 8), [0, 0, 255, 255]);
+  });
+
   it("batches by texture id", async () => {
     const quads = Array.from({ length: 100 }, (_, i) => quad({ x: i % 16, y: 0, w: 1, h: 1 }));
     expect((await draw({ quads })).drawCalls).toBe(1);

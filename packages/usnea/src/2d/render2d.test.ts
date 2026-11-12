@@ -47,6 +47,7 @@ interface Snap {
 function makeBackend() {
   let nextId = 1;
   const created: TextureInfo[] = [];
+  const sources: unknown[] = [];
   const destroyed: TextureInfo[] = [];
   const resizes: number[][] = [];
   const frames: Snap[] = [];
@@ -56,6 +57,7 @@ function makeBackend() {
     createTexture(image: PlatformImage) {
       const t = { id: nextId++, width: image.width, height: image.height };
       created.push(t);
+      sources.push(image.source);
       return t;
     },
     destroyTexture: (t) => void destroyed.push(t),
@@ -75,7 +77,7 @@ function makeBackend() {
     },
     dispose() {},
   };
-  return { backend, created, destroyed, resizes, frames };
+  return { backend, created, sources, destroyed, resizes, frames };
 }
 
 interface Opts {
@@ -522,5 +524,25 @@ describe("frame plumbing", () => {
     const s = h.draw();
     expect(h.resizes).toEqual([[320, 240]]);
     close(map(s.view, 320, 240), [1, -1]);
+  });
+
+  it("draws empty-image sprites as rectangles sharing one white texture", () => {
+    const h = make({ platform: false });
+    expect(h.created).toHaveLength(0);
+    for (const x of [0, 100]) {
+      const e = h.k.world.spawn();
+      h.k.world.add(e, Position, { x });
+      h.k.world.add(e, Sprite, { width: 40, height: 20, anchorX: 0, anchorY: 0 });
+    }
+    const s = h.draw();
+    expect(h.created).toHaveLength(1);
+    expect(h.created[0]).toMatchObject({ width: 1, height: 1 });
+    expect(h.sources[0]).toEqual(new Uint8Array([255, 255, 255, 255]));
+    expect(s.count).toBe(2);
+    expect(s.textures).toEqual([h.created[0]?.id, h.created[0]?.id]);
+    expect(s.v[4] - (s.v[0] as number)).toBe(40);
+    expect(s.v[9] - (s.v[1] as number)).toBe(20);
+    h.draw();
+    expect(h.created).toHaveLength(1);
   });
 });
